@@ -4,26 +4,10 @@ import 'package:flutter_assignment/json_exam/components/data.dart';
 import 'package:flutter_assignment/json_exam/model/picture.dart';
 
 
-class ImageSearching extends StatefulWidget {
+class ImageSearching extends StatelessWidget {
   const ImageSearching({Key? key}) : super(key: key);
 
-  @override
-  State<ImageSearching> createState() => ImageSearchingMain();
-}
 
-class ImageSearchingMain extends State<ImageSearching> {
-  List<Picture> data = [];
-
-  @override
-  void initState() {
-    super.initState();
-    initData();
-  }
-
-  Future initData() async {
-    data = await getImages();
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +28,7 @@ class ImageSearchingMain extends State<ImageSearching> {
               mySizeBox(),
               const Center(
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(10.0),
                   child: TextField(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -57,31 +41,52 @@ class ImageSearchingMain extends State<ImageSearching> {
                   ),
                 ),
               ),
-              mySizeBox(),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: data.isEmpty
-                      ? const Center(child: CircularProgressIndicator())
-                      : GridView.builder(
-                    itemCount: data.length,
-                    gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      Picture image = data[index];
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          image.previewURL,
-                          fit: BoxFit.cover,
+                  child: FutureBuilder<List<Picture>>(
+                    future: getImages(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('에러가 발생했습니다'),
+                        );
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: Text('데이터가 없습니다'),
+                        );
+                      }
+
+                      final images = snapshot.data!;
+
+                      return GridView.builder(
+                        itemCount: images.length,
+                        gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                         ),
+                        itemBuilder: (BuildContext context, int index) {
+                          Picture image = images[index];
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              image.previewURL,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
                       );
-                    },
-                  ),
+                    }
+                  )
+
                 ),
               ),
             ],
@@ -101,7 +106,9 @@ class ImageSearchingMain extends State<ImageSearching> {
 
     String jsonString = jsonData; //jsonData 받아옴 (String타입)
     Map<String, dynamic> json = jsonDecode(jsonString);
-    Iterable hits = json['hits'];
+    List hits = json['hits'];
     return hits.map((e) => Picture.fromJson(e)).toList();
   }
 }
+
+
