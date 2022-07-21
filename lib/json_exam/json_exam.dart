@@ -99,9 +99,9 @@ class ImageSearchingMain extends State<ImageSearching> {
   Future<List<Picture>> getImages() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    String jsonString = jsonData;
+    String jsonString = jsonData; //jsonData 받아옴 (String타입)
     Map<String, dynamic> json = jsonDecode(jsonString);
-    List hits = json['hits'];
+    Iterable hits = json['hits'];
     return hits.map((e) => Picture.fromJson(e)).toList();
   }
 }
