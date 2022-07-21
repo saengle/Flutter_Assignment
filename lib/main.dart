@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/futurebuilder_assignment/futurebuilder_assignment.dart';
 import 'package:flutter_assignment/json_exam/json_exam.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ImageSearching()     //  연결 필요
+      home: const FutureAssignment1()     //  연결 필요
     );
   }
 }

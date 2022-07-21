@@ -105,8 +105,8 @@ class ImageSearching extends StatelessWidget {
     await Future.delayed(const Duration(seconds: 2));
 
     String jsonString = jsonData; //jsonData 받아옴 (String타입)
-    Map<String, dynamic> json = jsonDecode(jsonString);
-    List hits = json['hits'];
+    Map<String, dynamic> json = jsonDecode(jsonString); //String타입 데이터를 Map으로 변환
+    List hits = json['hits']; // json(Map)에서 hits로 들어가서 List형식으로 변환.(hits 안의 정보들만)
     return hits.map((e) => Picture.fromJson(e)).toList();
   }
 }
