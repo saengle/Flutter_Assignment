@@ -63,26 +63,29 @@ class ImageSearching extends StatelessWidget {
                         );
                       }
 
-                      final images = snapshot.data!;
+                      final List<Picture> images = snapshot.data!;
+                      if (images.isEmpty) {
+                        return Center(
+                          child: Text('데이터가 0개입니다.'),
+                        );
+                      }
 
-                      return GridView.builder(
-                        itemCount: images.length,
+                      return GridView(
                         gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
                         ),
-                        itemBuilder: (BuildContext context, int index) {
-                          Picture image = images[index];
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              image.previewURL,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
+                          children: images.map((Picture image) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                image.previewURL,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          }).toList(),
                       );
                     }
                   )
@@ -106,7 +109,7 @@ class ImageSearching extends StatelessWidget {
 
     String jsonString = jsonData; //jsonData 받아옴 (String타입)
     Map<String, dynamic> json = jsonDecode(jsonString); //String타입 데이터를 Map으로 변환
-    List hits = json['hits']; // json(Map)에서 hits로 들어가서 List형식으로 변환.(hits 안의 정보들만)
+    List<dynamic> hits = json['hits']; // json(Map)에서 hits로 들어가서 List형식으로 변환.(hits 안의 정보들만)
     return hits.map((e) => Picture.fromJson(e)).toList();
   }
 }

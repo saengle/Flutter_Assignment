@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const FutureAssignment1()     //  연결 필요
+      home: const ImageSearching()     //  연결 필요
     );
   }
 }
