@@ -3,11 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assignment/json_exam/components/data.dart';
 import 'package:flutter_assignment/json_exam/model/picture.dart';
 
+class ImageSearchApp extends StatefulWidget {
+  const ImageSearchApp({Key? key}) : super(key: key);
 
-class ImageSearching extends StatelessWidget {
-  const ImageSearching({Key? key}) : super(key: key);
+  @override
+  State<ImageSearchApp> createState() => ImageSearching();
+}
 
 
+class ImageSearching extends State<ImageSearchApp> {
+
+  final _controller = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +39,24 @@ class ImageSearching extends StatelessWidget {
           child: Column(
             children: [
               mySizeBox(),
-              const Center(
+               Center(
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: TextField(
+                    controller: _controller,
                     decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         borderSide: BorderSide(color: Colors.blue, width: 2),
                       ),
-                      suffixIcon: Icon(Icons.search),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _query = _controller.text;
+                          });
+                        },
+                        child: const Icon(Icons.search),
+                      ),
                       hintText: '검색어를 입력하세요',
                     ),
                   ),
@@ -65,7 +86,7 @@ class ImageSearching extends StatelessWidget {
 
                       final List<Picture> images = snapshot.data!;
                       if (images.isEmpty) {
-                        return Center(
+                        return const Center(
                           child: Text('데이터가 0개입니다.'),
                         );
                       }
@@ -77,8 +98,7 @@ class ImageSearching extends StatelessWidget {
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
                         ),
-                          children: images.where((e) => e.tags.contains('red') ||
-                              e.tags.contains('co mputer'))
+                          children: images.where((e) => e.tags.contains(_query))
                           .map((Picture image) {
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(20),
