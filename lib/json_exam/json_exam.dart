@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/json_exam/components/data.dart';
 import 'package:flutter_assignment/json_exam/model/picture.dart';
+import 'package:http/http.dart' as http;
 
 class ImageSearchApp extends StatefulWidget {
   const ImageSearchApp({Key? key}) : super(key: key);
@@ -66,7 +67,7 @@ class ImageSearching extends State<ImageSearchApp> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FutureBuilder<List<Picture>>(
-                    future: getImages(),
+                    future: getImages(_query),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Center(
@@ -126,10 +127,13 @@ class ImageSearching extends State<ImageSearchApp> {
     );
   }
 
-  Future<List<Picture>> getImages() async {
-    await Future.delayed(const Duration(seconds: 2));
+  Future<List<Picture>> getImages(String query) async {
+   Uri url = Uri.parse('https://pixabay.com/api/?key=10711147-dc41758b93b263957026bdadb&q=$query&image_type=photo');
+   http.Response response = await http.get(url);
+   print('Response status: ${response.statusCode}');
 
-    String jsonString = jsonData; //jsonData 받아옴 (String타입)
+
+    String jsonString = response.body;
     Map<String, dynamic> json = jsonDecode(jsonString); //String타입 데이터를 Map으로 변환
     List<dynamic> hits = json['hits']; // json(Map)에서 hits로 들어가서 List형식으로 변환.(hits 안의 정보들만)
     return hits.map((e) => Picture.fromJson(e)).toList();
