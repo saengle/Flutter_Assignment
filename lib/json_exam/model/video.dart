@@ -3,17 +3,16 @@ import 'package:flutter_assignment/json_exam/json_exam.dart';
 import 'package:flutter_assignment/json_exam/model/video_player.dart';
 import 'package:flutter_assignment/json_exam/video_api.dart';
 
-
 class Video {
   final String tags;
-  final String picture_id;
+  final String pictureID;
   final String url;
 
-  Video({required this.picture_id, required this.tags, required this.url});
+  Video({required this.pictureID, required this.tags, required this.url});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
-      picture_id: json['picture_id'] as String,
+      pictureID: json['picture_id'] as String,
       tags: json['tags'] as String,
       url: json['videos']['large']['url'] as String,
     );
@@ -37,6 +36,7 @@ class _VideoScreenState extends State<VideoScreen> {
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -115,10 +115,10 @@ class _VideoScreenState extends State<VideoScreen> {
                             },
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                                child: Image.network(
-                                  "https://i.vimeocdn.com/video/${videos.picture_id}_640x360.jpg",
-                                  fit: BoxFit.cover,
-                                ),
+                              child: Image.network(
+                                "https://i.vimeocdn.com/video/${videos.pictureID}_640x360.jpg",
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         }).toList(),
@@ -130,4 +130,3 @@ class _VideoScreenState extends State<VideoScreen> {
     );
   }
 }
-
