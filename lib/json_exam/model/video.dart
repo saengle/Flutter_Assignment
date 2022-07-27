@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/json_exam/json_exam.dart';
-import 'package:flutter_assignment/json_exam/picture_api.dart';
+import 'package:flutter_assignment/json_exam/video_api.dart';
 
-class Picture {
+class Video {
   final String tags;
   final String previewURL;
 
-  Picture({
+  Video({
     required this.previewURL,
     required this.tags
   });
 
-  factory Picture.fromJson(Map<String, dynamic> json) {
-    return Picture(
+  factory Video.fromJson(Map<String, dynamic> json) {
+    return Video(
       previewURL: json['previewURL'] as String,
       tags: json['tags'] as String,
     );
   }
 }
-
-
-class PictureScreen extends StatefulWidget {
-  const PictureScreen({Key? key}) : super(key: key);
+class VideoScreen extends StatefulWidget {
+  const VideoScreen({Key? key}) : super(key: key);
 
   @override
-  State<PictureScreen> createState() => _PictureScreenState();
+  State<VideoScreen> createState() => _VideoScreenState();
 }
 
-class _PictureScreenState extends State<PictureScreen> {
+class _VideoScreenState extends State<VideoScreen> {
   final _controller = TextEditingController();
   String _query = '';
-  final _pictureApi = PictureApi();
+  final _videoApi = VideoApi();
 
   @override
   void dispose() {
@@ -70,8 +68,8 @@ class _PictureScreenState extends State<PictureScreen> {
           Expanded(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder<List<Picture>>(
-                    future: _pictureApi.getImages(_query),
+                child: FutureBuilder<List<Video>>(
+                    future: _videoApi.getVideo(_query),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Center(
@@ -91,7 +89,7 @@ class _PictureScreenState extends State<PictureScreen> {
                         );
                       }
 
-                      final List<Picture> images = snapshot.data!;
+                      final List<Video> images = snapshot.data!;
                       if (images.isEmpty) {
                         return const Center(
                           child: Text('데이터가 0개입니다.'),
@@ -107,7 +105,7 @@ class _PictureScreenState extends State<PictureScreen> {
                         ),
                         children: images
                             .where((e) => e.tags.contains(_query))
-                            .map((Picture image) {
+                            .map((Video image) {
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
