@@ -11,8 +11,8 @@ class PictureApi {
     String jsonString = response.body;
     Map<String, dynamic> json = jsonDecode(jsonString); //String타입 데이터를 Map으로 변환
     List<dynamic> hits =
-    json['hits']; // json(Map)에서 hits로 들어가서 List형식으로 변환.(hits 안의 정보들만)
-    return hits.map((e) => Picture.fromJson(e)).toList();
+    json['hits']; // json(Map)에서 hits로 들어감
+    return hits.map((e) => Picture.fromJson(e)).toList(); //List형식으로 변환.(hits 안의 정보들만)
   }
 
 }

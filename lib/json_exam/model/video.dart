@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/json_exam/json_exam.dart';
+import 'package:flutter_assignment/json_exam/model/video_player.dart';
 import 'package:flutter_assignment/json_exam/video_api.dart';
+
 
 class Video {
   final String tags;
-  final String previewURL;
+  final String picture_id;
+  final String url;
 
-  Video({
-    required this.previewURL,
-    required this.tags
-  });
+  Video({required this.picture_id, required this.tags, required this.url});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
-      previewURL: json['previewURL'] as String,
+      picture_id: json['picture_id'] as String,
       tags: json['tags'] as String,
+      url: json['videos']['large']['url'] as String,
     );
   }
 }
+
 class VideoScreen extends StatefulWidget {
   const VideoScreen({Key? key}) : super(key: key);
 
@@ -35,7 +37,6 @@ class _VideoScreenState extends State<VideoScreen> {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -77,10 +78,8 @@ class _VideoScreenState extends State<VideoScreen> {
                         );
                       }
 
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (!snapshot.hasData) {
@@ -89,8 +88,8 @@ class _VideoScreenState extends State<VideoScreen> {
                         );
                       }
 
-                      final List<Video> images = snapshot.data!;
-                      if (images.isEmpty) {
+                      final List<Video> videos = snapshot.data!;
+                      if (videos.isEmpty) {
                         return const Center(
                           child: Text('데이터가 0개입니다.'),
                         );
@@ -98,19 +97,28 @@ class _VideoScreenState extends State<VideoScreen> {
 
                       return GridView(
                         gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
                         ),
-                        children: images
+                        children: videos
                             .where((e) => e.tags.contains(_query))
-                            .map((Video image) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              image.previewURL,
-                              fit: BoxFit.cover,
+                            .map((Video videos) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VideoApp(videos.url)),
+                              );
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  "https://i.vimeocdn.com/video/${videos.picture_id}_640x360.jpg",
+                                  fit: BoxFit.cover,
+                                ),
                             ),
                           );
                         }).toList(),
@@ -122,5 +130,4 @@ class _VideoScreenState extends State<VideoScreen> {
     );
   }
 }
-
 
