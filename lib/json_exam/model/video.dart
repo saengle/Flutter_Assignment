@@ -118,7 +118,7 @@ class _VideoScreenState extends State<VideoScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Image.network(
-                                  "https://i.vimeocdn.com/video/${videos.pictureID}_640x360.jpg",
+                                  "https://i.vimeocdn.com/video/${videos.pictureID}_640x640.jpg",
                                   fit: BoxFit.cover,
                                 ),
                               ),
