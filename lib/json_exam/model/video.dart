@@ -39,6 +39,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _orientation = MediaQuery.of(context).orientation;
     return Center(
       child: Column(
         children: [
@@ -51,7 +52,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.blue, width: 2),
+                    borderSide: BorderSide(width: 2),
                   ),
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -96,11 +97,11 @@ class _VideoScreenState extends State<VideoScreen> {
                       }
 
                       return GridView(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          crossAxisSpacing: 10,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount:
+                              _orientation == Orientation.portrait ? 2 : 4,
                           mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
                         ),
                         children: videos
                             .where((e) => e.tags.contains(_query))

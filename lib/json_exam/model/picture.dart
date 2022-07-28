@@ -6,10 +6,7 @@ class Picture {
   final String tags;
   final String previewURL;
 
-  Picture({
-    required this.previewURL,
-    required this.tags
-  });
+  Picture({required this.previewURL, required this.tags});
 
   factory Picture.fromJson(Map<String, dynamic> json) {
     return Picture(
@@ -18,7 +15,6 @@ class Picture {
     );
   }
 }
-
 
 class PictureScreen extends StatefulWidget {
   const PictureScreen({Key? key}) : super(key: key);
@@ -40,6 +36,7 @@ class _PictureScreenState extends State<PictureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _orientation = MediaQuery.of(context).orientation;
     return Center(
       child: Column(
         children: [
@@ -52,7 +49,7 @@ class _PictureScreenState extends State<PictureScreen> {
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Colors.blue, width: 2),
+                    borderSide: BorderSide(width: 2),
                   ),
                   suffixIcon: GestureDetector(
                     onTap: () {
@@ -79,10 +76,8 @@ class _PictureScreenState extends State<PictureScreen> {
                         );
                       }
 
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (!snapshot.hasData) {
@@ -99,11 +94,11 @@ class _PictureScreenState extends State<PictureScreen> {
                       }
 
                       return GridView(
-                        gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 200,
-                          crossAxisSpacing: 10,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount:
+                              _orientation == Orientation.portrait ? 2 : 4,
                           mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
                         ),
                         children: images
                             .where((e) => e.tags.contains(_query))
@@ -124,4 +119,3 @@ class _PictureScreenState extends State<PictureScreen> {
     );
   }
 }
-

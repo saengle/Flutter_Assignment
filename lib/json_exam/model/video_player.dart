@@ -1,7 +1,6 @@
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
-
 class VideoApp extends StatefulWidget {
   const VideoApp(this.url, {Key? key}) : super(key: key);
   final String url;
@@ -18,7 +17,6 @@ class VideoPlayerScreen extends State<VideoApp> {
     super.initState();
     _controller = VideoPlayerController.network(widget.url)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
       });
   }
@@ -31,9 +29,9 @@ class VideoPlayerScreen extends State<VideoApp> {
         body: Center(
           child: _controller.value.isInitialized
               ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          )
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
               : Container(),
         ),
         floatingActionButton: FloatingActionButton(
