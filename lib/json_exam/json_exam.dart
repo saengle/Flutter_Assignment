@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/json_exam/model/picture.dart';
 import 'package:flutter_assignment/json_exam/model/video.dart';
-import 'package:flutter_assignment/json_exam/picture_api.dart';
+
 
 class ImageSearchApp extends StatefulWidget {
   const ImageSearchApp({Key? key}) : super(key: key);
@@ -11,12 +11,10 @@ class ImageSearchApp extends StatefulWidget {
 }
 
 class ImageSearching extends State<ImageSearchApp> {
-  final _controller = TextEditingController();
-
 
   int _selectedIndex = 0;
 
-  final screens = [
+  final screenBody = [
     const PictureScreen(),
     const VideoScreen(),
   ];
@@ -26,25 +24,20 @@ class ImageSearching extends State<ImageSearchApp> {
       _selectedIndex = index;
     });
   }
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:  AppBar(
         backgroundColor: Colors.white,
         title: const Center(
           child: Text(
-            'Image Searching',
+            'Search App',
             style: TextStyle(fontSize: 20, color: Colors.black),
           ),
         ),
       ),
-      body: screens[_selectedIndex],
+      body: screenBody[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.black26,
@@ -53,10 +46,10 @@ class ImageSearching extends State<ImageSearchApp> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.image,
-              color: Colors.white,), label: '',
+              color: Colors.white,), label: 'Image',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.video_label, color: Colors.white,), label: '',
+            icon: Icon(Icons.video_label, color: Colors.white,), label: 'Video',
           ),
         ],
       ),
@@ -66,7 +59,6 @@ class ImageSearching extends State<ImageSearchApp> {
 
 class MySizedBox extends StatelessWidget {
   const MySizedBox({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return const SizedBox(

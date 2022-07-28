@@ -113,13 +113,20 @@ class _VideoScreenState extends State<VideoScreen> {
                                     builder: (context) => VideoApp(videos.url)),
                               );
                             },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                "https://i.vimeocdn.com/video/${videos.pictureID}_640x360.jpg",
-                                fit: BoxFit.cover,
+                            child:
+                                Stack(alignment: Alignment.center, children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  "https://i.vimeocdn.com/video/${videos.pictureID}_640x360.jpg",
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
+                              const Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                              ),
+                            ]),
                           );
                         }).toList(),
                       );

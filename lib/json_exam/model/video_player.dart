@@ -7,10 +7,10 @@ class VideoApp extends StatefulWidget {
   final String url;
 
   @override
-  _VideoAppState createState() => _VideoAppState();
+  VideoPlayerScreen createState() => VideoPlayerScreen();
 }
 
-class _VideoAppState extends State<VideoApp> {
+class VideoPlayerScreen extends State<VideoApp> {
   late VideoPlayerController _controller;
 
   @override
