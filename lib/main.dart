@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assignment/json_exam/json_exam.dart';
 import 'package:flutter_assignment/json_exam/model/color_schemes.g.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_assignment/stream_counter_app/stream_counter_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
           colorScheme: darkColorScheme,
         ),
         themeMode: ThemeMode.system,
-        home: const ImageSearchApp() //  연결
+        home: StreamCounterApp() //  연결
         );
   }
 }
