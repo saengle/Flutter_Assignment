@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/book_managing_app/update_book/delete_book/delete_book_view_model.dart';
 import 'package:flutter_assignment/book_managing_app/update_book/update_book_view_model.dart';
 
 class UpdateBookScreen extends StatefulWidget {
@@ -15,7 +16,8 @@ class _UpdateBookScreen extends State<UpdateBookScreen> {
   final _titleTextController = TextEditingController();
   final _authorTextController = TextEditingController();
 
-  final viewModel = UpdateBookViewModel();
+  final updateViewModel = UpdateBookViewModel();
+  final deleteViewModel = DeleteBookViewModel();
 
   Map<String, dynamic> data = {};
 
@@ -41,6 +43,9 @@ class _UpdateBookScreen extends State<UpdateBookScreen> {
       body: Column(
         children: [
           TextField(
+            onChanged: (_) {
+              setState(() {});
+            },
             controller: _titleTextController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
@@ -48,6 +53,9 @@ class _UpdateBookScreen extends State<UpdateBookScreen> {
             ),
           ),
           TextField(
+            onChanged: (_) {
+              setState(() {});
+            },
             controller: _authorTextController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
@@ -61,18 +69,30 @@ class _UpdateBookScreen extends State<UpdateBookScreen> {
         children: [
           FloatingActionButton(
             onPressed: () {
-              viewModel.updateBook(
-                document: widget.document,
-                title: _titleTextController.text,
-                author: _authorTextController.text,
-              );
-              Navigator.pop(context);
+              try {
+                updateViewModel.updateBook(
+                  document: widget.document,
+                  title: _titleTextController.text,
+                  author: _authorTextController.text,
+                );
+                Navigator.pop(context);
+              } catch (e) {
+                //에러가 났을 때
+                final snackBar = SnackBar(
+                  content: Text(e.toString()),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              } finally {
+                //옵션
+                //에러가 나거나, 안 나거나 무조건 마지막에 수행 하는 블럭.
+              }
             },
             child: const Icon(Icons.save),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
+              deleteViewModel.deleteBook(document: widget.document);
               Navigator.pop(context);
             },
             child: const Icon(Icons.delete),

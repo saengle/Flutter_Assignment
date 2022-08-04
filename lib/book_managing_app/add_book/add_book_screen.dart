@@ -30,6 +30,9 @@ class _AddBookScreenState extends State<AddBookScreen> {
       body: Column(
         children: [
           TextField(
+            onChanged: (_) {
+              setState(() {});
+            },
             controller: _titleTextController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -37,6 +40,9 @@ class _AddBookScreenState extends State<AddBookScreen> {
             ),
           ),
           TextField(
+            onChanged: (_) {
+              setState(() {});
+            },
             controller: _authorTextController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -46,14 +52,18 @@ class _AddBookScreenState extends State<AddBookScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          viewModel.addBook(
-            title: _titleTextController.text,
-            author: _authorTextController.text,
-          );
-
-          Navigator.pop(context);
-        },
+        onPressed: viewModel.isValid(
+          _titleTextController.text,
+          _authorTextController.text,
+        )
+            ? null
+            : () {
+                viewModel.addBook(
+                  title: _titleTextController.text,
+                  author: _authorTextController.text,
+                );
+                Navigator.pop(context);
+              },
         child: const Icon(Icons.done),
       ),
     );
