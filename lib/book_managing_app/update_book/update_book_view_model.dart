@@ -8,7 +8,6 @@ class UpdateBookViewModel {
       required String title,
       required String author}) async {
     bool isValid = title.isNotEmpty && author.isNotEmpty;
-
     if (isValid) {
       _db.collection('books').doc(document.id).set({
         "title": title,
