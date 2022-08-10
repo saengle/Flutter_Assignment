@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assignment/json_exam/json_exam.dart';
-import 'package:flutter_assignment/json_exam/picture_api.dart';
+import 'package:flutter_assignment/json_exam/model/image_search_view_model.dart';
+import 'package:provider/provider.dart';
 
 class Picture {
   final String tags;
@@ -26,7 +27,6 @@ class PictureScreen extends StatefulWidget {
 class _PictureScreenState extends State<PictureScreen> {
   final _controller = TextEditingController();
   String _query = '';
-  final _pictureApi = PictureApi();
 
   @override
   void dispose() {
@@ -36,6 +36,7 @@ class _PictureScreenState extends State<PictureScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<ImageSearchViewModel>();
     final _orientation = MediaQuery.of(context).orientation;
     return Center(
       child: Column(
@@ -53,9 +54,7 @@ class _PictureScreenState extends State<PictureScreen> {
                   ),
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      setState(() {
-                        _query = _controller.text;
-                      });
+                      viewModel.fetchImages(_controller.text);
                     },
                     child: const Icon(Icons.search),
                   ),
@@ -65,54 +64,24 @@ class _PictureScreenState extends State<PictureScreen> {
             ),
           ),
           Expanded(
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder<List<Picture>>(
-                    future: _pictureApi.getImages(_query),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return const Center(
-                          child: Text('에러가 발생했습니다'),
-                        );
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: Text('데이터가 없습니다'),
-                        );
-                      }
-
-                      final List<Picture> images = snapshot.data!;
-                      if (images.isEmpty) {
-                        return const Center(
-                          child: Text('데이터가 0개입니다.'),
-                        );
-                      }
-
-                      return GridView(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount:
-                              _orientation == Orientation.portrait ? 2 : 4,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                        ),
-                        children: images
-                            .where((e) => e.tags.contains(_query))
-                            .map((Picture image) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              image.previewURL,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    })),
+            child: GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _orientation == Orientation.portrait ? 2 : 4,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+              ),
+              children: viewModel.images
+                  .where((e) => e.tags.contains(_query))
+                  .map((Picture image) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    image.previewURL,
+                    fit: BoxFit.cover,
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ],
       ),
